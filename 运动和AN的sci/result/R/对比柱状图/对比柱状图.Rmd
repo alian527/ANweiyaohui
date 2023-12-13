@@ -1,0 +1,102 @@
+
+install.packages("ggpubr")
+
+library(ggplot2)
+library(readxl)
+
+rm(list = ls())
+
+df=read_excel("蛋白.xlsx",col_names = TRUE)
+df <- as.data.frame(df)
+rownames(df) = df[,1]
+df = df[-60,-1]
+df1=df
+df1$l1=log(df1$`TNF-a`)
+df1$l2=log(df1$`IL-6`)
+df1$l3=log(df1$`Claudin-5`)
+df1$l4=log(df1$Zonulin)
+
+breaks <- c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10)
+
+df1$g1 <- cut(df1$l1, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+
+df1$g2 <- cut(df1$l2, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+
+df1$g3 <- cut(df1$l3, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+
+df1$g4 <- cut(df1$l4, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+
+ggplot(df1, aes(x = group, y = l1, fill = group))+
+stat_summary(mapping=aes(fill = group),fun=mean,geom = "bar",fun.args = list(mult=1),width=0.7,color="black")+stat_summary(fun.data=mean_sdl,fun.args = list(mult=1),geom="errorbar",width=0.2)+scale_fill_manual(values=c("red", "blue"))+
+theme_classic()+
+scale_y_continuous(expand = c(0,0),limits = c(0,1.1*max(df1$l1)))+
+theme(panel.background=element_rect(fill="white",colour="white",size=0.25), # 填充框内主题颜色，边框颜色和边框线条粗细
+axis.line=element_line(colour="black",size=1), # x,y轴颜色，粗细
+axis.title=element_text(size=15,color="black"), # x,y轴名设置
+axis.text = element_text(size=15,color="black"), # x,y轴文本设置
+legend.position="none")+
+labs(x='', y='TNF-a')
+
+
+
+stat_summary(mapping=aes(fill = group),fun=mean,geom = "bar",fun.args = list(mult=1),width=0.7,color="black")+stat_summary(fun.data=mean_sdl,fun.args = list(mult=1),geom="errorbar",width=0.2)+scale_fill_manual(values=c("black","white"))+
+theme_classic()+
+scale_y_continuous(expand = c(0,0),limits = c(0,10))+
+theme(panel.background=element_rect(fill="white",colour="white",size=0.25), # 填充框内主题颜色，边框颜色和边框线条粗细
+axis.line=element_line(colour="black",size=1), # x,y轴颜色，粗细
+axis.title=element_text(size=15,color="black"), # x,y轴名设置
+axis.text = element_text(size=15,color="black"), # x,y轴文本设置
+legend.position="none"
+)+
+labs(x='', y='TNF-a')
+
+
+ggplot(df,aes(group,`TNF-a`))+
+stat_summary(mapping=aes(fill = group),fun=mean,geom = "bar",fun.args = list(mult=1),width=0.7,color="black")+stat_summary(fun.data=mean_sdl,fun.args = list(mult=1),geom="errorbar",width=0.2)+scale_fill_manual(values=c("black","white"))+
+theme_classic()+
+scale_y_continuous(expand = c(0,0))+
+theme(panel.background=element_rect(fill="white",colour="white",size=0.25), # 填充框内主题颜色，边框颜色和边框线条粗细
+axis.line=element_line(colour="black",size=1), # x,y轴颜色，粗细
+axis.title=element_text(size=15,color="black"), # x,y轴名设置
+axis.text = element_text(size=15,color="black"), # x,y轴文本设置
+
+df11 <- subset(df1, group == "AN")
+df12 <- subset(df1, group == "HC")
+
+g11 <-ggplot(df11, aes(g1))+
+geom_bar(fill = "black", color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln TNF-a",y="")
+g12 <-ggplot(df11, aes(g2))+
+geom_bar(fill = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln IL-6",y="")
+g13 <-ggplot(df11, aes(g3))+
+geom_bar(fill = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Claudin-5",y="")
+g14 <-ggplot(df11, aes(g4))+
+geom_bar(fill = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Zonulin",y="")
+
+g21<-ggplot(df12, aes(g1))+
+geom_bar(fill = "white", color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln TNF-a",y="")
+g22 <-ggplot(df12, aes(g2))+
+geom_bar(fill = "white", color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln IL-6",y="")
+g23 <-ggplot(df12, aes(g3))+
+geom_bar(fill = "white", color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Claudin-5",y="")
+g24 <-ggplot(df12, aes(g4))+
+geom_bar(fill = "white", color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Zonulin",y="")
+
+windows(width = 8, height =6)
+grid.arrange(g11, g12, g13,g14)
+

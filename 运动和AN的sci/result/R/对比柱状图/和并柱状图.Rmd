@@ -1,0 +1,167 @@
+install.packages("ggpubr")
+
+library(ggpubr)
+library(cowplot)
+library(ggplot2)
+library(readxl)
+rm(list = ls())
+df=read_excel("蛋白.xlsx",col_names = TRUE)
+df <- as.data.frame(df)
+rownames(df) = df[,1]
+df = df[c(-7,-60),-1]
+df1=df
+df1$l1=log(df1$`TNF-a`)
+df1$l2=log(df1$`IL-6`)
+df1$l3=log(df1$`Claudin-5`)
+df1$l4=log(df1$Zonulin)
+breaks <- c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10)
+df1$g1 <- cut(df1$l1, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+df1$g2 <- cut(df1$l2, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+df1$g3 <- cut(df1$l3, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+df1$g4 <- cut(df1$l4, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
+g01 <-ggplot(df1, aes(g1,fill=group))+
+geom_bar(position = 'dodge', color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln TNF-a expression(ln ng/l)",y="")+scale_fill_manual(values = c("red", "blue")) 
+g02 <-ggplot(df1, aes(g2,fill=group))+
+geom_bar(position = 'dodge', color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln IL-6 expression(ln ng/l)",y="")+scale_fill_manual(values = c("red", "blue")) 
+g03 <-ggplot(df1, aes(g3,fill=group))+
+geom_bar(position = 'dodge', color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Claudin-5 expression(ln ng/l)",y="")+scale_fill_manual(values = c("red", "blue")) 
+g04 <-ggplot(df1, aes(g4,fill=group))+
+geom_bar(position = 'dodge', color = "black")+
+theme(axis.line = element_line(colour = "black", size = 1))+ 
+theme(panel.background = element_rect(fill = "white"))+labs(x = "ln Zonulin expression(ln ng/l)",y="")+scale_fill_manual(values = c("red", "blue")) 
+o05=ggplot(df1, aes(x = group, y = l1, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$l1))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln TNF-α expression(ln ng/l)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+o06=ggplot(df1, aes(x = group, y = l2, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$l2))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln IL-6 expression(ln ng/l)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE) 
+  o07=ggplot(df1, aes(x = group, y = l3, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$l3))) + theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln Claudin-5 expression(ln ng/l)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+   o08=ggplot(df1, aes(x = group, y = l4, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$l4))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln Zonulin expression(ln ng/l)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+w05=ggplot(df1, aes(x = group, y = `TNF-a`, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$`TNF-a`))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln TNF-α expression(ln ng/ml)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+w06=ggplot(df1, aes(x = group, y = `IL-6`, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$`IL-6`))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln IL-6 expression(ln ng/l)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE) 
+w07=ggplot(df1, aes(x = group, y = `Claudin-5`, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$`Claudin-5`))) + theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln Claudin-5 expression(ln ng/ml)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+w08=ggplot(df1, aes(x = group, y = Zonulin, fill = group)) +
+  stat_summary(mapping = aes(fill = group), fun = mean, geom = "bar", fun.args = list(mult = 1), width = 0.7, color = "black") +
+  stat_summary(fun.data = mean_sdl, fun.args = list(mult = 1), geom = "errorbar", width = 0.2) +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1.1 * max(df1$Zonulin))) +
+  theme(
+    panel.background = element_rect(fill = "white", colour = "white", size = 0.25, linewidth = 0.25),
+    axis.line = element_line(colour = "black", size = 1),
+    axis.title = element_text(size = 15, color = "black"),
+    axis.text = element_text(size = 15, color = "black"),
+    legend.position = "none"
+  ) +
+  labs(x = '', y = 'ln Zonulin expression(ln ng/ml)') +
+  geom_signif(comparisons = list(c("AN","HC")),map_signif_level=TRUE)
+
+windows(width = 5, height =10)
+all_plots <- plot_grid(g01,g02,g03,g04, ncol = 1, nrow = 4)
+all_plots  
+
+windows(width = 4, height =10)
+all_plots2 <- plot_grid(o05,o06,o07,o08, ncol =1, nrow = 4)
+all_plots2   
+
+all_plots3 <- plot_grid(w05,w06,w07,w08, ncol = 1, nrow = 4)
+all_plots3
+  
