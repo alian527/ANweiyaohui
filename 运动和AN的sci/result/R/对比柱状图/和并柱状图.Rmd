@@ -8,21 +8,15 @@ rm(list = ls())
 df=read_excel("蛋白.xlsx",col_names = TRUE)
 df <- as.data.frame(df)
 rownames(df) = df[,1]
-df = df[c(-7,-60),-1]
+
 df1=df
-df1$l1=log(df1$`TNF-a`)
-df1$l2=log(df1$`IL-6`)
-df1$l3=log(df1$`Claudin-5`)
-df1$l4=log(df1$Zonulin)
-breaks <- c(0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10)
-df1$g1 <- cut(df1$l1, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
-df1$g2 <- cut(df1$l2, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
-df1$g3 <- cut(df1$l3, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
-df1$g4 <- cut(df1$l4, breaks, labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-2.5", "2.5-3", "3-3.5", "3.5-4", "4-4.5", "4.5-5", "5-5.5", "5.5-6", "6-6.5", "6.5-7", "7-7.5", "7.5-8", "8-8.5", "8.5-9", "9-9.5", "9.5-10"))
-g01 <-ggplot(df1, aes(g1,fill=group))+
+
+g01 <-ggplot(df1, aes(,fill=group))+
 geom_bar(position = 'dodge', color = "black")+
 theme(axis.line = element_line(colour = "black", size = 1))+ 
 theme(panel.background = element_rect(fill = "white"))+labs(x = "ln TNF-a expression(ln ng/l)",y="")+scale_fill_manual(values = c("red", "blue")) 
+
+
 g02 <-ggplot(df1, aes(g2,fill=group))+
 geom_bar(position = 'dodge', color = "black")+
 theme(axis.line = element_line(colour = "black", size = 1))+ 
